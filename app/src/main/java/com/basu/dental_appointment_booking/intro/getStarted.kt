@@ -45,7 +45,9 @@ fun DecorativeGlassCard(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun DenturaOnboardingScreen() {
+fun NandiOnboardingScreen(
+    onGetStartedClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +78,7 @@ fun DenturaOnboardingScreen() {
             Spacer(modifier = Modifier.height(48.dp))
 
             Text(
-                text = "DENTURA",
+                text = "NANDI",
                 style = TextStyle(
                     color = Color.White,
                     fontSize = 36.sp,
@@ -85,9 +87,9 @@ fun DenturaOnboardingScreen() {
                     fontFamily = FontFamily.SansSerif
                 )
             )
-
+            Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "PREMIUM DENTAL CLINIC",
+                text = "MULTI SPECIALITY DENTAL CLINIC",
                 style = TextStyle(
                     color = Color.White.copy(alpha = 0.7f),
                     fontSize = 20.sp,
@@ -95,7 +97,6 @@ fun DenturaOnboardingScreen() {
                     letterSpacing = 2.sp,
                     textAlign = TextAlign.Center
                 )
-
             )
 
             Spacer(modifier = Modifier.height(60.dp))
@@ -150,7 +151,7 @@ fun DenturaOnboardingScreen() {
 
             // Action Button
             Button(
-                onClick = { /* Navigation logic */ },
+                onClick = onGetStartedClick,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black

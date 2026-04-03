@@ -130,7 +130,9 @@ fun DentistCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatientDashboard(
-    onBookClick: (String) -> Unit
+    onBookClick: (String) -> Unit,
+    onBookingsTabClick: () -> Unit,
+    onProfileClick:() -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
@@ -270,7 +272,7 @@ fun PatientDashboard(
                 }
 
                 // Bookings Tab
-                IconButton(onClick = { /* Navigate */ }) {
+                IconButton(onClick = {onBookingsTabClick()}) {
                     Icon(
                         imageVector = Icons.Rounded.CalendarMonth,
                         contentDescription = "Bookings",
@@ -280,7 +282,7 @@ fun PatientDashboard(
                 }
 
                 // Profile Tab
-                IconButton(onClick = { /* Navigate */ }) {
+                IconButton(onClick = {onProfileClick()}) {
                     Icon(
                         imageVector = Icons.Rounded.Person,
                         contentDescription = "Profile",
@@ -297,6 +299,6 @@ fun PatientDashboard(
 @Composable
 fun PatientDashboardPreview() {
     MaterialTheme {
-        PatientDashboard(onBookClick = {})
+        PatientDashboard(onBookClick = {}, onBookingsTabClick = {}, onProfileClick = {})
     }
 }

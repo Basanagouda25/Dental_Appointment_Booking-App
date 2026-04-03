@@ -10,4 +10,7 @@ sealed class NavRoutes(val route: String) {
         fun createRoute(id: String) = "dentist_profile/$id"
     }
     object BookSlot : NavRoutes("book_slot")
+    object BookingHistory: NavRoutes("booking_history")
+    object UserProfile : NavRoutes("user_profile")
+
 }

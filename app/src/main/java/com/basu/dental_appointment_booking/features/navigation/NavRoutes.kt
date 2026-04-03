@@ -13,4 +13,11 @@ sealed class NavRoutes(val route: String) {
     object BookingHistory: NavRoutes("booking_history")
     object UserProfile : NavRoutes("user_profile")
     object BookingConfirmation : NavRoutes("booking_confirmation")
+    object DoctorLogin : NavRoutes("doctor_login")
+    object DoctorRegister : NavRoutes("doctor_register")
+    object DoctorDashboard : NavRoutes("doctor_dashboard")
+    object DoctorSchedule : NavRoutes("doctor_schedule")
+    object PatientRecords : NavRoutes("patient_records")
+    object DoctorProfile : NavRoutes("doctor_profile")
+
 }

@@ -3,10 +3,16 @@ package com.basu.dental_appointment_booking.features.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost // Ensure this is the correct import
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.basu.dental_appointment_booking.auth.LoginScreen
+import com.basu.dental_appointment_booking.doctor.DoctorLoginScreen
+import com.basu.dental_appointment_booking.doctor.DoctorRegistrationScreen
+import com.basu.dental_appointment_booking.features.dashboard.DoctorScheduleScreen
+import com.basu.dental_appointment_booking.features.doctor.DoctorDashboardScreen
+import com.basu.dental_appointment_booking.features.doctor.DoctorProfileScreen
+import com.basu.dental_appointment_booking.features.doctor.PatientRecordScreen
 import com.basu.dental_appointment_booking.features.user.BookSlotScreen
 import com.basu.dental_appointment_booking.features.user.BookingConfirmationScreen
 import com.basu.dental_appointment_booking.features.user.BookingHistoryScreen
@@ -16,6 +22,7 @@ import com.basu.dental_appointment_booking.features.user.UserProfileScreen
 import com.basu.dental_appointment_booking.features.user.UserRegistration
 import com.basu.dental_appointment_booking.intro.NandiOnboardingScreen
 import com.basu.dental_appointment_booking.intro.RoleSelectionScreen
+import com.basu.dental_appointment_booking.intro.UserRole
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
@@ -38,8 +45,11 @@ fun AppNavGraph(navController: NavHostController) {
             RoleSelectionScreen(
                 onBackClick = { navController.popBackStack() },
                 onContinueClick = { role ->
-                    // Pass the role as a argument if needed, or just navigate to login
-                    navController.navigate(NavRoutes.Login.route)
+                    if (role == UserRole.DOCTOR) {
+                        navController.navigate(NavRoutes.DoctorLogin.route)
+                    } else {
+                        navController.navigate(NavRoutes.Login.route)
+                    }
                 }
             )
         }
@@ -161,6 +171,95 @@ fun AppNavGraph(navController: NavHostController) {
                     // Navigate back to Dashboard and clear the booking flow from history
                     navController.navigate(NavRoutes.PatientDashboard.route) {
                         popUpTo(NavRoutes.PatientDashboard.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable(NavRoutes.DoctorLogin.route) {
+            DoctorLoginScreen(
+                onBackClick = { navController.popBackStack() },
+                onSignUpClick = { navController.navigate(NavRoutes.DoctorRegister.route) },
+                onLoginSuccess = {
+                    navController.navigate(NavRoutes.DoctorDashboard.route) {
+                        popUpTo(NavRoutes.DoctorLogin.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(NavRoutes.DoctorRegister.route) {
+            DoctorRegistrationScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onSignInClick = { // Changed from onRegisterSuccess to onSignInClick
+                    navController.navigate(NavRoutes.DoctorLogin.route) {
+                        // Clear the registration screen from the backstack
+                        popUpTo(NavRoutes.DoctorRegister.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(NavRoutes.DoctorDashboard.route) {
+            DoctorDashboardScreen(
+                onPatientClick = { patientId ->
+                    // Navigate to a patient detail screen if you have one
+                    // navController.navigate("patient_detail/$patientId")
+                },
+                onCalendarClick = {
+                    // Navigate to Doctor's specific calendar view
+                    navController.navigate(NavRoutes.DoctorSchedule.route)
+                },
+                onRecordsClick = {
+                    // Navigate to medical records section
+                    navController.navigate(NavRoutes.PatientRecords.route)
+                },
+                onProfileClick = {
+                    navController.navigate(NavRoutes.DoctorProfile.route) {
+                        popUpTo(0)
+                    }
+                }
+            )
+        }
+
+        composable(NavRoutes.DoctorSchedule.route) {
+            DoctorScheduleScreen(
+                onHomeClick = {
+                    navController.navigate(NavRoutes.DoctorDashboard.route) {
+                        popUpTo(NavRoutes.DoctorDashboard.route) { inclusive = true }
+                    }
+                },
+                onRecordsClick = { navController.navigate(NavRoutes.PatientRecords.route)},
+                onProfileClick = { navController.navigate(NavRoutes.DoctorProfile.route) }
+            )
+        }
+        composable(NavRoutes.PatientRecords.route) {
+            PatientRecordScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+        composable(NavRoutes.DoctorProfile.route) {
+            DoctorProfileScreen(
+                onHomeClick = {
+                    navController.navigate(NavRoutes.DoctorDashboard.route) {
+                        popUpTo(NavRoutes.DoctorDashboard.route) { inclusive = true }
+                    }
+                },
+                onCalendarClick = {
+                    navController.navigate(NavRoutes.DoctorSchedule.route) {
+                        popUpTo(NavRoutes.DoctorDashboard.route) { inclusive = false }
+                    }
+                },
+                onRecordsClick = {
+                    navController.navigate(NavRoutes.PatientRecords.route) {
+                        popUpTo(NavRoutes.DoctorDashboard.route) { inclusive = false }
+                    }
+                },
+                onLogoutClick = {
+                    // Logs the doctor out and completely clears the backstack, sending them to Role Selection or Login
+                    navController.navigate(NavRoutes.RoleSelection.route) {
+                        popUpTo(0) { inclusive = true }
                     }
                 }
             )

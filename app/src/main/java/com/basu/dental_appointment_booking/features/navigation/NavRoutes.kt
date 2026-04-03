@@ -12,5 +12,5 @@ sealed class NavRoutes(val route: String) {
     object BookSlot : NavRoutes("book_slot")
     object BookingHistory: NavRoutes("booking_history")
     object UserProfile : NavRoutes("user_profile")
-
+    object BookingConfirmation : NavRoutes("booking_confirmation")
 }

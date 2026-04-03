@@ -207,7 +207,7 @@ fun BookSlotScreen(
                 .padding(vertical = 24.dp, horizontal = 24.dp)
         ) {
             Button(
-                onClick = { if (isReadyToBook) onConfirmClick() },
+                onClick = { onConfirmClick() },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black,

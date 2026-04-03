@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.basu.dental_appointment_booking.auth.LoginScreen
 import com.basu.dental_appointment_booking.features.user.BookSlotScreen
+import com.basu.dental_appointment_booking.features.user.BookingConfirmationScreen
 import com.basu.dental_appointment_booking.features.user.BookingHistoryScreen
 import com.basu.dental_appointment_booking.features.user.DentistProfileScreen
 import com.basu.dental_appointment_booking.features.user.PatientDashboard
@@ -110,7 +111,7 @@ fun AppNavGraph(navController: NavHostController) {
                 onConfirmClick = {
                     // In the future: Send data to Firebase here.
                     // For the prototype: Navigate back to the Dashboard or to a "Success" screen
-                    navController.navigate(NavRoutes.PatientDashboard.route) {
+                    navController.navigate(NavRoutes.BookingConfirmation.route) {
                         popUpTo(NavRoutes.PatientDashboard.route) { inclusive = true }
                     }
                 }
@@ -150,6 +151,16 @@ fun AppNavGraph(navController: NavHostController) {
                     // Log out clears everything and goes to Role Selection or Login
                     navController.navigate(NavRoutes.RoleSelection.route) {
                         popUpTo(NavRoutes.RoleSelection.route) { inclusive = true } // This completely clears the entire backstack!
+                    }
+                }
+            )
+        }
+        composable(NavRoutes.BookingConfirmation.route) {
+            BookingConfirmationScreen(
+                onDoneClick = {
+                    // Navigate back to Dashboard and clear the booking flow from history
+                    navController.navigate(NavRoutes.PatientDashboard.route) {
+                        popUpTo(NavRoutes.PatientDashboard.route) { inclusive = true }
                     }
                 }
             )

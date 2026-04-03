@@ -11,7 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack // NEW IMPORT
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Visibility
@@ -41,11 +41,15 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun LoginScreen(
     onBackClick: () -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
+    onLoginSuccess: () -> Unit // Parameter to trigger navigation
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
+    // State to hold and display login errors
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     Box(
         modifier = Modifier
@@ -69,14 +73,14 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // --- NEW: Back Button Row ---
+            // Back Button Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = onBackClick, // Triggers your navigation popBackStack
-                    modifier = Modifier.offset(x = (-12).dp) // Slight offset so the icon visually aligns with the text below it
+                    onClick = onBackClick,
+                    modifier = Modifier.offset(x = (-12).dp)
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.ArrowBack,
@@ -113,7 +117,10 @@ fun LoginScreen(
             // Email Field
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = {
+                    email = it
+                    errorMessage = null // Clear error when typing
+                },
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Email Address", color = Color.Gray) },
                 leadingIcon = {
@@ -129,8 +136,8 @@ fun LoginScreen(
                     unfocusedTextColor = Color.White,
                     focusedContainerColor = Color(0x1AFFFFFF),
                     unfocusedContainerColor = Color(0x1AFFFFFF),
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White.copy(alpha = 0.3f),
+                    focusedBorderColor = if (errorMessage != null) Color.Red else Color.White,
+                    unfocusedBorderColor = if (errorMessage != null) Color.Red else Color.White.copy(alpha = 0.3f),
                     cursorColor = Color.White
                 ),
                 shape = RoundedCornerShape(16.dp)
@@ -141,7 +148,10 @@ fun LoginScreen(
             // Password Field
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = {
+                    password = it
+                    errorMessage = null // Clear error when typing
+                },
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Password", color = Color.Gray) },
                 leadingIcon = {
@@ -164,12 +174,25 @@ fun LoginScreen(
                     unfocusedTextColor = Color.White,
                     focusedContainerColor = Color(0x1AFFFFFF),
                     unfocusedContainerColor = Color(0x1AFFFFFF),
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White.copy(alpha = 0.3f),
+                    focusedBorderColor = if (errorMessage != null) Color.Red else Color.White,
+                    unfocusedBorderColor = if (errorMessage != null) Color.Red else Color.White.copy(alpha = 0.3f),
                     cursorColor = Color.White
                 ),
                 shape = RoundedCornerShape(16.dp)
             )
+
+            // Error Message Display
+            if (errorMessage != null) {
+                Text(
+                    text = errorMessage!!,
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, start = 4.dp),
+                    textAlign = TextAlign.Start
+                )
+            }
 
             // Forgot Password Link
             Box(
@@ -194,7 +217,14 @@ fun LoginScreen(
 
             // Main Action Button
             Button(
-                onClick = { /* Handle Login */ },
+                onClick = {
+                    // --- MOCK AUTHENTICATION LOGIC ---
+                    if (email == "test@gmail.com" && password == "123456") {
+                        onLoginSuccess() // Trigger the navigation callback
+                    } else {
+                        errorMessage = "Invalid email or password"
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black
@@ -252,7 +282,8 @@ fun LoginScreenPreview() {
     MaterialTheme {
         LoginScreen(
             onBackClick = {},
-            onSignUpClick = {}
+            onSignUpClick = {},
+            onLoginSuccess = {}
         )
     }
 }
